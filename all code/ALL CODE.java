@@ -1,5 +1,6 @@
 public class Main {
 
+    // Crea un analizador lexico y un analizador sintactico
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
         AnalizadorLexico lex = new AnalizadorLexico();
@@ -19,7 +20,7 @@ public class AnalizadorLexico {
     void reservar(Palabra w) {
         palabras.put(w.lexema, w);
     }
-
+    // Reservamos las palabras clave
     public AnalizadorLexico() {
         reservar(new Palabra("if", Etiqueta.IF));
         reservar(new Palabra("else", Etiqueta.IF));
@@ -48,7 +49,7 @@ public class AnalizadorLexico {
         preanalisis = ' ';
         return true;
     }
-    
+    // Reconoce números, identificadores y palabras reservadas. Ignora el espacio en blanco y los tokens compuestos
     public Token explorar() throws IOException {
         for( ; ; readch()) {
             if (preanalisis == ' ' || preanalisis == '\t') continue;
@@ -101,6 +102,7 @@ public class AnalizadorLexico {
         
     }
 }
+// Define las constantes de los tokens
 public class Etiqueta {
 
     public final static int 
@@ -122,6 +124,7 @@ public class Num extends Token {
         return "" + valor;
     }
 }
+// Administra los lexemas para las palabras resevadas, identificadores y tokens
 public class Palabra extends Token {
 
     public String lexema = "";
@@ -136,6 +139,7 @@ public class Palabra extends Token {
             minus = new Palabra("minus", Etiqueta.MINUS), True = new Palabra("true", Etiqueta.TRUE), 
             False = new Palabra("false", Etiqueta.FALSE), temp = new Palabra("t", Etiqueta.TEMP);
 }
+// Maneja los numeros con decimales
 public class Real extends Token {
 
     public final float valor;
@@ -497,7 +501,7 @@ public class And extends Logica {
         }
     }
 }
-
+// Implementa los operadores binarios como + y *
 public class Arit extends Op {
 
     public Expr expr1, expr2;
@@ -520,7 +524,8 @@ public class Arit extends Op {
         return expr1.toString() + " " + op.toString() + " " + expr2.toString();
     }
 }
-
+// Utiliza el campo instr para guardar la construcción de la instrucción
+circundante
 public class Break extends Instr {
 
     Instr instr;
@@ -610,7 +615,7 @@ public class Else extends Instr {
         instr2.gen(etiqueta2, a);
     }
 }
-
+// Implementa asignaciones con un identificador del lado izquierdo y una expresión a la derecha
 public class Est extends Instr {
 
     public Id id;
@@ -638,7 +643,7 @@ public class Est extends Instr {
         emitir(id.toString() + " = " + expr.gen().toString());
     }
 }
-
+// Implementa las asignaciones para un elemento de un arreglo
 public class EstElem extends Instr {
 
     public Id arreglo;
@@ -672,7 +677,7 @@ public class EstElem extends Instr {
         emitir(arreglo.toString() + " [ " + s1 + " ] = " + s2);
     }
 }
-
+// Maneja la construcción de expresiones
 public class Expr extends Nodo {
     public Token op;
     public Tipo tipo;
@@ -680,16 +685,19 @@ public class Expr extends Nodo {
         op = tok;
         tipo = p;
     }
-    
+    // Devuelve un "termino" que puede caber del lado derecho de una instrucción de tres direcciones.
     public Expr gen() {
         return this;
     }
+    // Calcula o “reduce” una expresión hasta una sola dirección
     public Expr reducir(){
         return this;
     }
+    // Generan el código de salto para las expresiones booleanas
     public void salto(int t, int f){
         emitirsaltos(toString(),t,f);
     }
+    // Generan el código de salto para las expresiones booleanas
     public void emitirsaltos(String prueba, int t, int f){
         if(t != 0 && f != 0){
             emitir("if" + prueba + " goto L"+t);
@@ -703,7 +711,7 @@ public class Expr extends Nodo {
         return op.toString();
     }
 }
-
+// Hereda las implementaciones predeterminadas de gen y reducir en la clase Expr, ya que un identificador es una dirección
 public class Id extends Expr {
     public int desplazamiento;
     public Id(Palabra id, Tipo p, int b) {
@@ -848,7 +856,7 @@ public class Or extends Logica {
         }
     }
 }
-
+// Implementa los operadores <, <=, ==, !=, >= y >
 public class Rel extends Logica {
 
     public Rel(Token tok, Expr x1, Expr x2) {
@@ -872,7 +880,7 @@ public class Rel extends Logica {
         emitirsaltos(prueba, t, f);
     }
 }
-
+// implementa una secuencia de instrucciones.
 public class Sec extends Instr {
 
     Instr instr1;
@@ -977,7 +985,7 @@ public class Arreglo extends Tipo {
         return "[" + tamanio + "]" + de.toString();
     }
 }
-
+// Asigna tokens de palabras a objetos de la clase Id
 public class Ent {
 
     private Hashtable tabla;
@@ -1024,7 +1032,7 @@ public class Tipo extends Palabra {
             return false;
         }
     }
-
+    // se utiliza para las conversiones de tipos
     public static Tipo max(Tipo p1, Tipo p2) {
         if (!numerico(p1) || !numerico(p2)) {
             return null;
