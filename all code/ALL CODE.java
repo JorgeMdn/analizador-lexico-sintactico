@@ -524,8 +524,7 @@ public class Arit extends Op {
         return expr1.toString() + " " + op.toString() + " " + expr2.toString();
     }
 }
-// Utiliza el campo instr para guardar la construcción de la instrucción
-circundante
+// Utiliza el campo instr para guardar la construcción de la instrucción circundante
 public class Break extends Instr {
 
     Instr instr;
