@@ -22,6 +22,7 @@ public class Main {
      */
     public static void main(String[] args) throws IOException {
         // TODO code application logic here
+        System.out.println("Escribe el codigo a analizar: ");
         AnalizadorLexico lex = new AnalizadorLexico();
         Analizador analizar = new Analizador(lex);
         analizar.programa();

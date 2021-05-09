@@ -29,7 +29,7 @@ public class Expr extends Nodo {
     }
     public void emitirsaltos(String prueba, int t, int f){
         if(t != 0 && f != 0){
-            emitir("if" + prueba + " goto L"+t);
+            emitir("if " + prueba + " goto L"+t);
             emitir("goto L" + f);
         }
         else if (t != 0) emitir("if " + prueba + " goto L" + t);

@@ -17,7 +17,7 @@ public class AnalizadorLexico {
 
     public static int linea = 1;
     char preanalisis = ' ';
-    Hashtable palabras = new Hashtable();
+    Hashtable<String,Palabra> palabras = new Hashtable<String,Palabra>();
 
     void reservar(Palabra w) {
         palabras.put(w.lexema, w);
@@ -25,10 +25,10 @@ public class AnalizadorLexico {
 
     public AnalizadorLexico() {
         reservar(new Palabra("if", Etiqueta.IF));
-        reservar(new Palabra("else", Etiqueta.IF));
-        reservar(new Palabra("while", Etiqueta.IF));
-        reservar(new Palabra("do", Etiqueta.IF));
-        reservar(new Palabra("break", Etiqueta.IF));
+        reservar(new Palabra("else", Etiqueta.ELSE));
+        reservar(new Palabra("while", Etiqueta.WHILE));
+        reservar(new Palabra("do", Etiqueta.DO));
+        reservar(new Palabra("break", Etiqueta.BREAK));
         reservar(Palabra.True);
         reservar(Palabra.False);
         reservar(Tipo.Int);
@@ -74,8 +74,9 @@ public class AnalizadorLexico {
         }
         if(Character.isDigit(preanalisis)){
             int v= 0;
+            // 969
             do{
-                v = 10* v + Character.digit(preanalisis,10); readch();
+                v = 10 * v + Character.digit(preanalisis,10); readch();
             }while(Character.isDigit(preanalisis));
             if (preanalisis != '.') return new Num(v);
             float x = v; float d = 10;

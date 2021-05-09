@@ -8,7 +8,7 @@ import inter.*;
 // Analizados sintactico
 public class Analizador {
 
-    private AnalizadorLexico lex; //analizador lexico para este analizador sintactico
+    private AnalizadorLexico lex = new AnalizadorLexico();; //analizador lexico para este analizador sintactico
     private Token busca; // marca de busqueda por adelantado
     Ent sup = null; // tabla de simbolos actual o superior
     int usado = 0; // almacenamiento usado para las declaraciones
@@ -23,7 +23,7 @@ public class Analizador {
     }
 
     void error(String s) {
-        throw new Error("cerca de linea " + lex.linea + ": " + s);
+        throw new Error("cerca de linea " + AnalizadorLexico.linea + ": " + s);
     }
 
     void coincidir(int t) throws IOException {
@@ -103,7 +103,7 @@ public class Analizador {
 
     Instr instr() throws IOException {
         Expr x;
-        Instr s, s1, s2;
+        Instr  s1, s2;
         Instr instrGuardada; // guarda ciclo circundante p/instrucciones break
         switch (busca.etiqueta) {
             case ';':
@@ -244,47 +244,54 @@ public class Analizador {
     }
 
     Expr unario() throws IOException {
-        if (busca.etiqueta == '−') {
-            mover();
-            return new Unario(Palabra.minus, unario());
-        } else if (busca.etiqueta == '!') {
-            Token tok = busca;
-            mover();
-            return new Not(tok, unario());
-        } else {
-            return factor();
+        switch (busca.etiqueta) {
+            case '−':
+                mover();
+                return new Unario(Palabra.minus, unario());
+            case '!':
+                Token tok = busca;
+                mover();
+                return new Not(tok, unario());
+            default:
+                return factor();
         }
     }
 
     Expr factor() throws IOException {
         Expr x = null;
         switch (busca.etiqueta) {
-            case '(':
+            case '(' -> {
                 mover();
                 x = bool();
                 coincidir(')');
                 return x;
-            case Etiqueta.NUM:
+            }
+            case Etiqueta.NUM -> {
                 x = new Constante(busca, Tipo.Int);
                 mover();
                 return x;
-            case Etiqueta.REAL:
+            }
+            case Etiqueta.REAL -> {
                 x = new Constante(busca, Tipo.Float);
                 mover();
                 return x;
-            case Etiqueta.TRUE:
+            }
+            case Etiqueta.TRUE -> {
                 x = Constante.True;
                 mover();
                 return x;
-            case Etiqueta.FALSE:
+            }
+            case Etiqueta.FALSE -> {
                 x = Constante.False;
                 mover();
                 return x;
-            default:
+            }
+            default -> {
                 error("error de sintaxis");
                 return x;
-            case Etiqueta.ID:
-                String s = busca.toString();
+            }
+            case Etiqueta.ID -> {
+                //String s = busca.toString();
                 Id id = sup.get(busca);
                 if (id == null) {
                     error(busca.toString() + " no declarado");
@@ -295,6 +302,7 @@ public class Analizador {
                 } else {
                     return desplazamiento(id);
                 }
+            }
         }
     }
 

@@ -19,7 +19,8 @@ public class Tipo extends Palabra {
         super(s, etiqueta);
         anchura = w;
     }
-    public static final Tipo Int = new Tipo("int", Etiqueta.BASIC, 4),
+    public static final Tipo 
+            Int = new Tipo("int", Etiqueta.BASIC, 4),
             Float = new Tipo("float", Etiqueta.BASIC, 8),
             Char = new Tipo("char", Etiqueta.BASIC, 1),
             Bool = new Tipo("bool", Etiqueta.BASIC, 1);
